@@ -18,16 +18,13 @@ MONITORING_GROUP="monitoring"
 SNMP_WRAPPER="/usr/local/sbin/snmp-config"
 SUDOERS_FILE="/etc/sudoers.d/monitoring-snmp"
 
-# Default values
+
 USERNAME=""
 DESCRIPTION="User permitted to configure SNMP"
 EXPIRATION_DATE=""
 COMMUNITY="labpublic"
 MANAGER_IP=""
 
-# ============================================================
-# Logging / error handling
-# ============================================================
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
@@ -50,9 +47,6 @@ error_handler() {
 
 trap 'error_handler $LINENO' ERR
 
-# ============================================================
-# Usage
-# ============================================================
 
 usage() {
     cat <<EOF
@@ -98,9 +92,7 @@ Example:
 EOF
 }
 
-# ============================================================
-# Argument parsing
-# ============================================================
+
 
 while [[ $# -gt 0 ]]; do
 
@@ -151,9 +143,6 @@ while [[ $# -gt 0 ]]; do
 
 done
 
-# ============================================================
-# Validation
-# ============================================================
 
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root."
@@ -179,27 +168,22 @@ if [[ -z "$MANAGER_IP" ]]; then
     exit 1
 fi
 
-# Validate username
+
 if [[ ! "$USERNAME" =~ ^[a-z_][a-z0-9_-]*[$]?$ ]]; then
     echo "ERROR: Invalid username."
     exit 1
 fi
 
-# Validate expiration date
 if ! date -d "$EXPIRATION_DATE" >/dev/null 2>&1; then
     echo "ERROR: Invalid expiration date: $EXPIRATION_DATE"
     exit 1
 fi
 
-# Validate IPv4 address
 if [[ ! "$MANAGER_IP" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
     echo "ERROR: Invalid manager IP: $MANAGER_IP"
     exit 1
 fi
 
-# ============================================================
-# Start logging
-# ============================================================
 
 touch "$LOG_FILE"
 chmod 600 "$LOG_FILE"
@@ -209,9 +193,7 @@ log "Username: $USERNAME"
 log "Expiration: $EXPIRATION_DATE"
 log "Manager IP: $MANAGER_IP"
 
-# ============================================================
-# Install required packages
-# ============================================================
+
 
 if ! dpkg-query -W -f='${Status}' "$SNMP_PACKAGE" 2>/dev/null \
     | grep -q "install ok installed"; then
@@ -228,9 +210,6 @@ else
 
 fi
 
-# ============================================================
-# Create monitoring group
-# ============================================================
 
 if ! getent group "$MONITORING_GROUP" >/dev/null; then
 
@@ -244,9 +223,6 @@ else
 
 fi
 
-# ============================================================
-# Create user
-# ============================================================
 
 if id "$USERNAME" >/dev/null 2>&1; then
 
@@ -264,17 +240,13 @@ else
 
 fi
 
-# ============================================================
-# Add user to monitoring group
-# ============================================================
+
 
 log "Adding $USERNAME to $MONITORING_GROUP."
 
 usermod -aG "$MONITORING_GROUP" "$USERNAME"
 
-# ============================================================
-# Set account expiration
-# ============================================================
+
 
 log "Setting account expiration to $EXPIRATION_DATE."
 
@@ -282,9 +254,7 @@ usermod \
     --expiredate "$(date -d "$EXPIRATION_DATE" +%Y-%m-%d)" \
     "$USERNAME"
 
-# ============================================================
-# Configure SNMP
-# ============================================================
+
 
 if [[ -f "$SNMP_CONFIG" ]]; then
 
@@ -315,9 +285,7 @@ EOF
 chmod 600 "$SNMP_CONFIG"
 chown root:root "$SNMP_CONFIG"
 
-# ============================================================
-# Create restricted SNMP management wrapper
-# ============================================================
+
 
 log "Creating restricted SNMP management wrapper."
 
@@ -371,9 +339,6 @@ EOF
 chmod 755 "$SNMP_WRAPPER"
 chown root:root "$SNMP_WRAPPER"
 
-# ============================================================
-# Configure restricted sudo permissions
-# ============================================================
 
 log "Creating restricted sudo rule."
 
@@ -388,9 +353,7 @@ chown root:root "$SUDOERS_FILE"
 # Validate sudo configuration
 visudo -cf "$SUDOERS_FILE"
 
-# ============================================================
-# Enable and start SNMP
-# ============================================================
+
 
 log "Enabling SNMP service."
 
@@ -400,9 +363,7 @@ log "Restarting SNMP service."
 
 systemctl restart snmpd
 
-# ============================================================
-# Validation
-# ============================================================
+
 
 log "Checking SNMP service status."
 
@@ -437,9 +398,6 @@ log "Checking sudo configuration."
 
 sudo -l -U "$USERNAME"
 
-# ============================================================
-# Completion
-# ============================================================
 
 echo
 echo "============================================================"
