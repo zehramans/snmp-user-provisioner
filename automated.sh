@@ -77,7 +77,7 @@ chage -M 365 sysadmin
 
 echo "=== Installing libpam-pwquality ==="
 
-apt update
+
 apt install -y libpam-pwquality
 
 
