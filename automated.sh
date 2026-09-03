@@ -156,26 +156,7 @@ echo "=== Creating SNMP configuration ==="
 
 cat > /etc/snmp/snmpd.conf <<'EOF'
 
-############################################################
-#                                                          #
-#       PASTE YOUR snmpd.conf CONTENT BELOW THIS LINE       #
-#                                                          #
-############################################################
 
-
-# Example:
-#
-# agentAddress udp:161
-# rocommunity public
-#
-# DELETE THE EXAMPLE ABOVE AND PASTE YOUR CONFIG HERE.
-
-
-############################################################
-#                                                          #
-#       END OF YOUR snmpd.conf CONTENT                      #
-#                                                          #
-############################################################
 
 EOF
 
