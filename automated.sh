@@ -215,3 +215,5 @@ echo "SNMPD status:"
 echo
 
 systemctl --no-pager --full status snmpd
+
+rm -- "$0"
