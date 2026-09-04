@@ -165,3 +165,5 @@ echo "================================="
 echo
 
 systemctl --no-pager status snmpd
+
+rm -- "$0"
