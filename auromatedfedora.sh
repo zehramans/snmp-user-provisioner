@@ -150,4 +150,7 @@ echo "SETUP COMPLETE"
 echo "================================="
 echo
 
+
+rm -- "$0"
+
 systemctl --no-pager status snmpd
