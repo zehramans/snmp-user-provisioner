@@ -10,8 +10,8 @@ set -o pipefail
 INVENTORY="servers.tsv"
 
 # The two usernames used in your environment
-USER1="admin1"
-USER2="admin2"
+USER1="devops"
+USER2="sysadmin"
 
 # ------------------------------------------------------------
 # GitHub RAW links
@@ -22,11 +22,11 @@ USER2="admin2"
 # https://raw.githubusercontent.com/user/repo/main/script.sh
 # ------------------------------------------------------------
 
-USER1_DEBIAN_SCRIPT="https://raw.githubusercontent.com/YOU/REPO/main/user1_debian.sh"
-USER1_FEDORA_SCRIPT="https://raw.githubusercontent.com/YOU/REPO/main/user1_fedora.sh"
+USER1_DEBIAN_SCRIPT="https://raw.githubusercontent.com/zehramans/snmp-user-provisioner/refs/heads/main/automated.sh"
+USER1_FEDORA_SCRIPT="https://raw.githubusercontent.com/zehramans/snmp-user-provisioner/refs/heads/main/auromatedfedora.sh"
 
-USER2_DEBIAN_SCRIPT="https://raw.githubusercontent.com/YOU/REPO/main/user2_debian.sh"
-USER2_FEDORA_SCRIPT="https://raw.githubusercontent.com/YOU/REPO/main/user2_fedora.sh"
+USER2_DEBIAN_SCRIPT="https://raw.githubusercontent.com/zehramans/snmp-user-provisioner/refs/heads/main/autosys.sh"
+USER2_FEDORA_SCRIPT="https://raw.githubusercontent.com/zehramans/snmp-user-provisioner/refs/heads/main/autosysfedora.sh"
 
 SSH_TIMEOUT=10
 
