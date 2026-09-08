@@ -66,9 +66,6 @@ usermod -aG sudo sysadmin
 # Maximum password age = 365 days
 # ==========================================
 
-echo "=== Setting password expiration ==="
-
-chage -M 365 sysadmin
 
 
 # ==========================================
@@ -85,29 +82,6 @@ apt install -y libpam-pwquality
 # 6. CONFIGURE PASSWORD QUALITY
 # ==========================================
 
-echo "=== Configuring password quality ==="
-
-PWQUALITY="/etc/security/pwquality.conf"
-
-# Backup
-cp "$PWQUALITY" "${PWQUALITY}.backup"
-
-# Remove old versions of these settings
-sed -i '/^[[:space:]]*minlen[[:space:]]*=/d' "$PWQUALITY"
-sed -i '/^[[:space:]]*ucredit[[:space:]]*=/d' "$PWQUALITY"
-sed -i '/^[[:space:]]*lcredit[[:space:]]*=/d' "$PWQUALITY"
-sed -i '/^[[:space:]]*dcredit[[:space:]]*=/d' "$PWQUALITY"
-sed -i '/^[[:space:]]*ocredit[[:space:]]*=/d' "$PWQUALITY"
-
-cat >> "$PWQUALITY" <<'EOF'
-
-# Password policy
-minlen = 10
-ucredit = -1
-lcredit = -1
-dcredit = -1
-ocredit = -1
-EOF
 
 
 # ==========================================
@@ -155,6 +129,8 @@ fi
 echo "=== Creating SNMP configuration ==="
 
 cat > /etc/snmp/snmpd.conf <<'EOF'
+
+
 
 
 
