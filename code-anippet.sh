@@ -1,42 +1,56 @@
 # ============================================================
-# CHECK SNMP CONFIGURATION
+# SNMP CONFIGURATION CHECK
 # ============================================================
 
 SNMP_CONF="/etc/snmp/snmpd.conf"
+SNMP_BACKUP="/snmpd.conf.backup"
 
-if [[ -f "$SNMP_CONF" ]]; then
-    echo "[OK] SNMP configuration found: $SNMP_CONF"
+if [[ -f "$SNMP_BACKUP" ]]; then
+    echo "[OK] SNMP backup already exists."
+    echo "[OK] Skipping SNMP configuration."
+
 else
-    echo "[!] SNMP configuration not found: $SNMP_CONF"
+    echo "[!] $SNMP_BACKUP does not exist."
+    echo "[!] SNMP configuration is required."
     echo
     echo "Paste the contents of snmpd.conf below."
     echo "When finished, type EOF on a new line and press Enter:"
     echo "------------------------------------------------------------"
 
-    TMP_SNMP_CONF=$(mktemp)
+    TMP_CONF=$(mktemp)
 
     while IFS= read -r line; do
         [[ "$line" == "EOF" ]] && break
-        printf '%s\n' "$line" >> "$TMP_SNMP_CONF"
+        printf '%s\n' "$line" >> "$TMP_CONF"
     done
 
-    if [[ ! -s "$TMP_SNMP_CONF" ]]; then
-        echo "ERROR: No configuration was provided."
-        rm -f "$TMP_SNMP_CONF"
+    # Make sure something was actually pasted
+    if [[ ! -s "$TMP_CONF" ]]; then
+        echo "ERROR: No SNMP configuration was provided."
+        rm -f "$TMP_CONF"
         exit 1
     fi
 
-    # Make sure directory exists
-    sudo mkdir -p "$(dirname "$SNMP_CONF")"
+    # Ensure SNMP directory exists
+    sudo mkdir -p /etc/snmp
 
-    # Install with root ownership and restrictive permissions
-    sudo install -o root -g root -m 600 "$TMP_SNMP_CONF" "$SNMP_CONF"
+    # If an existing snmpd.conf exists, preserve it as the backup
+    if [[ -f "$SNMP_CONF" ]]; then
+        sudo cp "$SNMP_CONF" "$SNMP_BACKUP"
+        echo "[OK] Existing configuration backed up to $SNMP_BACKUP"
+    else
+        # Create marker/backup file if no previous config existed
+        sudo touch "$SNMP_BACKUP"
+        echo "[OK] Created $SNMP_BACKUP"
+    fi
 
-    rm -f "$TMP_SNMP_CONF"
+    # Install the new configuration
+    sudo install -o root -g root -m 600 "$TMP_CONF" "$SNMP_CONF"
 
-    echo
-    echo "[OK] Created $SNMP_CONF"
+    rm -f "$TMP_CONF"
+
+    echo "[OK] New SNMP configuration written to:"
+    echo "     $SNMP_CONF"
 fi
 
-# The rest of your script continues here...
-echo "Continuing..."
+echo "[OK] Continuing with the rest of the script..."
