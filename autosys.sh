@@ -112,12 +112,6 @@ apt install -y snmpd
 # 9. BACK UP ORIGINAL SNMP CONFIG
 # ==========================================
 
-echo "=== Backing up SNMP configuration ==="
-
-if [ -f /etc/snmp/snmpd.conf ]; then
-    cp /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.backup
-fi
-
 
 # ==========================================
 # 10. CREATE SNMP CONFIGURATION
@@ -130,7 +124,7 @@ echo "=== Creating SNMP configuration ==="
 # ============================================================
 
 SNMP_CONF="/etc/snmp/snmpd.conf"
-SNMP_BACKUP="/snmpd.conf.backup"
+SNMP_BACKUP="/etc/snmp/snmpd.conf.backup"
 
 if [[ -f "$SNMP_BACKUP" ]]; then
     echo "[OK] SNMP backup already exists."
