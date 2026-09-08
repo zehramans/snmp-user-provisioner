@@ -27,7 +27,7 @@ Endpoint Central PoC — Operations Checklist
 15	Offline endpoint behavior	✓	✓	✓	✓	☐
 16	Failed deployment handling	✓	✓	✓	✓	☐
 
-https://endpointcentral.zbaz.local/client#/login/activate?userToken=6c232c13-cc4f-4fbe-8163-96b4e38509d5
+
 1. Agent & Communication
 
 On every test machine:
