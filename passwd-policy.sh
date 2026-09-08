@@ -250,5 +250,7 @@ echo "  faillock --user USERNAME"
 echo
 echo "Reset failed attempts with:"
 echo
+
+rm -- "$0"
 echo "  faillock --user USERNAME --reset"
 echo
