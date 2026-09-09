@@ -403,6 +403,9 @@ sudo chage \
     -W 7 \
     "$AUTOSYS_USER"
 
+sudo chage -m 1 -M 42 -W 7 sysadmin
+sudo chage -m 1 -M 42 -W 7 devops 
+
 echo "Password lifetime configured."
 echo "Password will expire after 90 days."
 
